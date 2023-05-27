@@ -1,0 +1,191 @@
+\documentclass{article}
+\usepackage[UTF8]{ctex}
+\usepackage{graphicx}
+\usepackage[colorlinks, linkcolor=blue]{hyperref}
+\begin{document}
+\begin{center}
+    \includegraphics[width=0.3\textwidth]{logo.png} \\
+    项目名称：\underline{提取debian软件包的控制信息生成SPEC文件} \\
+    导师：\underline{王铮}  \\
+    申请人：\underline{杨凌云} \\
+    邮箱：\underline{tinaaaaa@sjtu.edu.cn} \\
+    日期：\underline{\today}
+\end{center}
+\tableofcontents
+\newpage
+
+\section{项目背景}
+\subsection{项目简介}
+为 openEuler 引入debian的软件包,需要把deb形式的软件包,转成rpm形式的软件包。而生成rpm软件包, spec文件是必须项。
+
+\subsection{项目产出要求}
+\begin{itemize}
+    \item 生成SPEC文件需要符合规范,重点关注多子包的情况
+    \item 软件通过SPEC文件能够在openEuler完成构建
+\end{itemize}
+
+\subsection{项目链接}
+\subsubsection{参考资料}
+\begin{itemize}
+    \item \href{https://www.debian.org/doc/debian-policy/ch-controlfields.html}
+    {https://www.debian.org/doc/debian-policy/ch-controlfields.html}
+    \item \href{https://www.debian.org/doc/debian-policy/ch-source.html\#main-building-script-debian-rules}
+    {https://www.debian.org/doc/debian-policy/ch-source.html\#main-building-script-debian-rules}
+    \item \href{https://rpm-packaging-guide.github.io/\#what-is-a-spec-file}
+    {https://rpm-packaging-guide.github.io/\#what-is-a-spec-file}
+\end{itemize}
+
+\subsubsection{成果仓库}
+\href{https://gitee.com/openeuler/oec-application}
+{https://gitee.com/openeuler/oec-application}
+
+\section{技术可行性分析}
+\subsection{Linux相关}
+我从半年前配置CSAPP环境时开始使用Ubuntu系统,目前使用的主力系统是Arch Linux,因此我对Linux系统以及各大发行版
+有较多了解,对Linux的命令和脚本较为熟悉。
+
+\subsection{软件包相关}
+使用Ubuntu系统时,我对apt命令下载软件包很有兴趣,了解过软件包的结构,知道软件包的安装构建过程。
+
+\subsection{python相关}
+我在大一开始时自学了python,并在自学国外课程时通过python写爬虫爬取资料 (比如MIT微积分网站上的数百个pdf文件)。
+其中使用到的正则表达式等知识同样可以运用到本项目中。
+
+\section{项目基本知识}
+\label{sec:basic_knowledge}
+这部分内容我在阅读了参考资料后自己进行了总结,对应地整理出了三份文档存放在我的
+\href{https://github.com/tinaaaaa42/deb2rpm}{项目仓库}中。
+
+下面我进一步地介绍一下这三份文档的内容。
+
+\subsection{deb包的control文件}
+\label{sec:deb_control}
+deb包的control文件是一个文本文件,包含了软件包的基本信息,比如软件包的名称,版本,作者,依赖等等。
+它既会在源包中出现,也会在二进制包中出现。其基本格式为若干个键值对。
+其中有如下重要的字段：
+
+\begin{itemize}
+    \item Package  软件包的名称
+    \item Source   源包的名称
+    \item Version  软件包的版本
+    \item Architecture  软件包的架构
+    \item Depends  软件包的依赖
+    \item Description  软件包的描述
+    \item Maintainer  软件包的维护者
+    \item Homepage  软件包的主页
+    \item Section  软件包的分类
+    \item Priority  软件包的优先级
+\end{itemize}
+
+\subsection{deb包的rule文件}
+\label{sec:deb_rule}
+deb包的rule文件是一个脚本文件,包含了软件包的构建过程,比如软件包的编译,安装,打包等等。
+其基本格式为若干个规则,每个规则包含了若干个目标和依赖。
+其中典型的有：
+\begin{itemize}
+    \item build 构建软件包
+    \item build-arch 构建软件包(特定架构)
+    \item build-indep 构建软件包(架构无关)
+    \item clean 清理软件包
+    \item install 安装软件包
+    \item binary 构建二进制包
+    \item binary-arch 构建二进制包(特定架构)
+    \item binary-indep 构建二进制包(架构无关)
+    
+\end{itemize}
+
+\subsection{rpm包的spec文件}
+rpm包的spec文件是一个文本文件,包含了rpm软件包的基本信息,比如软件包的名称,版本,作者,依赖等等。
+其基本格式为\emph{前言段}和\emph{主体段},前者包含包的元数据，类似\ref{sec:deb_control}中的control文件;
+后者包含构建等过程的脚本,类似\ref{sec:deb_rule}中的rule文件。
+
+\emph{前言段}中有如下重要的段落:
+\begin{itemize}
+    \item Name  软件包的名称
+    \item Version  软件包的版本
+    \item Release  软件包的发布号
+    \item Summary  软件包的简介
+    \item License  软件包的许可证
+    \item URL  软件包的主页
+    \item Source0  软件包的源码
+    \item Patch0  软件包的补丁
+    \item BuildArch  软件包的架构
+    \item BuildRequires  软件包的构建依赖
+    \item Requires  软件包的运行依赖
+\end{itemize}
+
+\emph{主体段}中有如下重要的段落:
+\begin{itemize}
+    \item \%description  软件包的描述
+    \item \%prep  构建前准备
+    \item \%build  构建阶段
+    \item \%install  安装阶段
+    \item \%check  测试阶段
+    \item \%files  文件列表
+    \item \%changelog  修改日志
+\end{itemize}
+
+\section{项目实现}
+根据\ref{sec:basic_knowledge}中的知识,可以发现deb包和rpm包的构建过程有很多相似之处。
+比如rpm包的spec文件中的\emph{前言段}主要包含元数据,可以与deb包中的control文件对应;
+spec文件中的\emph{主体段}主要包含构建脚本等内容,可以与deb包中的rule文件对应。
+更具体的,我们可以在将spec前言段和control文件在字段层面进行对应,如下表所示:
+\begin{center}
+    \begin{tabular}{|c|c|}
+    \hline
+    rpm spec前言段 & deb control\\
+    \hline
+    Name & Package \\
+    \hline
+    Version & Version或Standards Version \\
+    \hline
+    Release & Version \\
+    \hline
+    Summary & Description \\
+    \hline
+    License & License \\
+    \hline
+    URL & Homepage \\
+    \hline
+    Source0 & Source \\
+    \hline
+    BuildArch & Architecture \\
+    \hline
+    BuildRequires & Build-Depends \\
+    \hline
+    Requires & Depends \\
+    \hline
+    \end{tabular}
+\end{center}
+
+同样的,我们可以在将spec主体段和rule文件在规则层面进行对应,如下表所示:
+\begin{center}
+    \begin{tabular}{|c|c|}
+        \hline
+        rpm spec主体段 & deb rule \\
+        \hline
+        \%description & Description \\
+        \hline
+        \%prep & Source, Build \\
+        \hline
+        \%build & build \\
+        \hline
+        \%install & install \\
+        \hline
+        \%check & test \\
+        \hline
+        \%files & source \\
+        \hline
+    \end{tabular}
+\end{center}
+另外, rpm包的spec文件中的\emph{\%changelog}可以通过deb包中的\emph{.change文件}来提取。
+因此,我们可以将rpm包的spec文件和deb包的control文件,rule文件,change文件进行对应,如下图所示:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./images/convert.png}
+    \caption{rpm包和deb包的对应关系}
+\end{figure}
+
+\section{时间安排}
+
+\end{document}
