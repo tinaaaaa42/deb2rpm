@@ -4,7 +4,7 @@
 \usepackage[colorlinks, linkcolor=blue]{hyperref}
 \begin{document}
 \begin{center}
-    \includegraphics[width=0.3\textwidth]{logo.png} \\
+    \includegraphics[width=0.23\textwidth]{logo.png} \\
     项目名称：\underline{提取debian软件包的控制信息生成SPEC文件} \\
     导师：\underline{王铮}  \\
     申请人：\underline{杨凌云} \\
@@ -179,13 +179,20 @@ spec文件中的\emph{主体段}主要包含构建脚本等内容,可以与deb�
     \end{tabular}
 \end{center}
 另外, rpm包的spec文件中的\emph{\%changelog}可以通过deb包中的\emph{.change文件}来提取。
-因此,我们可以将rpm包的spec文件和deb包的control文件,rule文件,change文件进行对应,如下图所示:
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{./images/convert.png}
-    \caption{rpm包和deb包的对应关系}
-\end{figure}
 
 \section{时间安排}
+\subsection{研发阶段(7.1-8.15)}
+\begin{itemize}
+    \item 完善deb包和rpm包的对应关系
+    \item 完成deb包和rpm spec文件的转换工具
+    \item 在openEuler上对一些基础包进行测试
+\end{itemize}
+
+\subsection{测试阶段(8.16-9.30)}
+\begin{itemize}
+    \item 在openEuler上对更多包进行测试,并完善细节处理
+    \item 完成对包转换工具的测试,并对其进行优化
+    \item 完成文档的书写
+\end{itemize}
 
 \end{document}
