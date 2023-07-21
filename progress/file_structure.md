@@ -184,3 +184,4 @@ debian/tmp
 
 4 directories, 8 files
 ```
+由此可以推断，调用`fakeroot debian/rules binary`打包时，会执行`debian/rules`文件中的`override_dh_auto_install`命令，而手动执行`dh_auto_install`则只是该命令的默认行为。
